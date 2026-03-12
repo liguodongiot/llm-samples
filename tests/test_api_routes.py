@@ -19,9 +19,16 @@ def test_matmul_invalid_dimensions():
     })
     assert response.status_code == 400
 
-def test_matmul_invalid_dtype():
+def test_matmul_integer_input():
     response = client.post("/matmul", json={
         "A": [[1, 2]],
         "B": [[3], [4]]
+    })
+    assert response.status_code == 200
+
+def test_matmul_invalid_dtype():
+    response = client.post("/matmul", json={
+        "A": [["a", "b"]],
+        "B": [["c"], ["d"]]
     })
     assert response.status_code == 422
