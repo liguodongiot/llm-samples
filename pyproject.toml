@@ -19,6 +19,7 @@ dev = [
     "pytest-cov>=4.0.0",
     "fastapi>=0.100.0",
     "uvicorn>=0.23.0",
+    "numpy",
 ]
 
 [tool.setuptools.packages.find]
