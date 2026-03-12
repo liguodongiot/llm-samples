@@ -8,6 +8,7 @@ A PyTorch custom matrix multiplication operator library for learning purposes.
 - 支持前向传播和反向传播（自动求导）
 - 算子注册表模式，便于扩展
 - 输入验证（维度检查、类型检查）
+- FastAPI HTTP API 支持
 - 完整的单元测试覆盖
 
 ## 安装
@@ -68,6 +69,35 @@ B = torch.randn(4, 5, dtype=torch.float32, requires_grad=True)
 result = MatMul.apply(A, B)
 ```
 
+### FastAPI 服务
+
+启动 HTTP API 服务：
+
+```bash
+# 安装 dev 依赖（包含 fastapi）
+pip install -e ".[dev]"
+
+# 启动服务
+uvicorn matmul_ops.api.main:app --reload --host localhost --port 8000
+```
+
+调用 API：
+
+```bash
+# 矩阵乘法
+curl -X POST http://localhost:8000/matmul \
+  -H "Content-Type: application/json" \
+  -d '{"A": [[1, 2], [3, 4]], "B": [[5, 6], [7, 8]]}}'
+
+# 返回结果: {"result": [[19.0, 22.0], [43.0, 50.0]]}
+
+# 查看 API 文档
+curl http://localhost:8000/
+# 返回: {"message":"MatMul API","docs":"/docs"}
+```
+
+访问 `http://localhost:8000/docs` 可查看 Swagger API 文档。
+
 ## 运行测试
 
 ### 本地运行
@@ -101,12 +131,18 @@ matmul_ops/
 │   │   ├── base.py          # 基础抽象类
 │   │   ├── matmul.py        # 矩阵乘算子实现
 │   │   └── registry.py      # 算子注册表
+│   ├── api/
+│   │   ├── main.py         # FastAPI 应用
+│   │   ├── routes.py       # API 路由
+│   │   └── models.py       # Pydantic 模型
 │   └── utils/
 │       └── validators.py    # 输入验证工具
 ├── tests/                   # 单元测试
 │   ├── test_matmul_op.py
 │   ├── test_registry.py
-│   └── test_validators.py
+│   ├── test_validators.py
+│   ├── test_api_models.py
+│   └── test_api_routes.py
 ├── examples/
 │   └── basic_usage.py       # 使用示例
 └── docs/
