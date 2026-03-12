@@ -14,7 +14,7 @@ COPY src/ src/
 RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/ && \
     pip config set global.trusted-host mirrors.aliyun.com
 
-RUN pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir -e ".[dev]"
 
 COPY tests/ tests/
 COPY examples/ examples/

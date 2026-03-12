@@ -20,6 +20,7 @@ dev = [
     "fastapi>=0.100.0",
     "uvicorn>=0.23.0",
     "numpy",
+    "httpx",
 ]
 
 [tool.setuptools.packages.find]
