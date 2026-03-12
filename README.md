@@ -71,7 +71,7 @@ result = MatMul.apply(A, B)
 
 ### FastAPI 服务
 
-启动 HTTP API 服务：
+#### 本地启动
 
 ```bash
 # 安装 dev 依赖（包含 fastapi）
@@ -81,13 +81,23 @@ pip install -e ".[dev]"
 uvicorn matmul_ops.api.main:app --reload --host localhost --port 8000
 ```
 
+#### Docker 启动
+
+```bash
+# 构建镜像
+docker build -t matmul_ops .
+
+# 运行服务
+docker run -p 8000:8000 matmul_ops uvicorn matmul_ops.api.main:app --host 0.0.0.0 --port 8000
+```
+
 调用 API：
 
 ```bash
 # 矩阵乘法
 curl -X POST http://localhost:8000/matmul \
   -H "Content-Type: application/json" \
-  -d '{"A": [[1, 2], [3, 4]], "B": [[5, 6], [7, 8]]}}'
+  -d '{"A": [[1, 2], [3, 4]], "B": [[5, 6], [7, 8]]}'
 
 # 返回结果: {"result": [[19.0, 22.0], [43.0, 50.0]]}
 
@@ -154,12 +164,14 @@ matmul_ops/
 ### 1. torch.autograd.Function
 
 自定义算子需要继承 `torch.autograd.Function` 并实现：
+
 - `forward()`: 前向计算
 - `backward()`: 反向传播梯度计算
 
 ### 2. 梯度计算原理
 
 对于矩阵乘法 `C = A @ B`：
+
 - `∂C/∂A = grad_output @ B^T`
 - `∂C/∂B = A^T @ grad_output`
 
