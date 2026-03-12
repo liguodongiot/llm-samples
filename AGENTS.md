@@ -15,12 +15,18 @@ matmul_ops/
 │   │   ├── base.py          # Abstract base class
 │   │   ├── matmul.py        # MatMul operator
 │   │   └── registry.py     # Operator registry
+│   ├── api/
+│   │   ├── main.py         # FastAPI application
+│   │   ├── routes.py       # API endpoints
+│   │   └── models.py       # Pydantic models
 │   └── utils/
 │       └── validators.py    # Input validation
 ├── tests/
 │   ├── test_matmul_op.py
 │   ├── test_registry.py
-│   └── test_validators.py
+│   ├── test_validators.py
+│   ├── test_api_models.py
+│   └── test_api_routes.py
 └── examples/
     └── basic_usage.py
 ```
@@ -50,6 +56,26 @@ pytest tests/ -v                                # Verbose
 ```bash
 docker build -t matmul_ops .
 docker run matmul_ops pytest tests/ -v
+```
+
+### Running API Server
+
+```bash
+uvicorn matmul_ops.api.main:app --reload --host localhost --port 8000
+```
+
+### API Usage
+
+```bash
+# Matrix multiplication
+curl -X POST http://localhost:8000/matmul \
+  -H "Content-Type: application/json" \
+  -d '{"A": [[1, 2], [3, 4]], "B": [[5, 6], [7, 8]]}'
+# Returns: {"result": [[19.0, 22.0], [43.0, 50.0]]}
+
+# API documentation
+curl http://localhost:8000/
+# Returns: {"message":"MatMul API","docs":"/docs"}
 ```
 
 ## Code Style Guidelines
@@ -171,6 +197,8 @@ __all__ = ["MatMul", "get_op", "validate_matrix_dimensions", "validate_tensor_ty
 - `torch>=2.0.0` - PyTorch
 - `pytest>=7.0.0` - Testing framework
 - `pytest-cov>=4.0.0` - Coverage plugin
+- `fastapi>=0.100.0` - FastAPI web framework
+- `uvicorn>=0.23.0` - ASGI server
 
 ## Notes
 
