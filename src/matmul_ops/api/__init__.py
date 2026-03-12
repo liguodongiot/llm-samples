@@ -1,1 +1,3 @@
-# Empty __init__.py for api package
+from .routes import router
+
+__all__ = ["router"]
